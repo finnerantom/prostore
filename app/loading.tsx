@@ -17,7 +17,7 @@ const LoadingPage = () => {
             unoptimized={true}
             width="0"
             height="0"
-            priority={false}
+            priority={true}
             sizes="100vw"
             style={{ width: 150, height: 'auto' }}
         />
