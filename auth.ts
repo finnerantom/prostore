@@ -1,34 +1,35 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { prisma } from "./db/prisma";
-import { compareSync } from "bcrypt-ts-edge";
-import type { NextAuthConfig } from "next-auth";
+import { PrismaAdapter } from '@auth/prisma-adapter';
+import NextAuth from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { prisma } from './db/prisma';
+import { compareSync } from 'bcrypt-ts-edge';
+import type { NextAuthConfig } from 'next-auth';
 
 export const config = {
   pages: {
-    signIn: "/sign-in",
-    error: "/sign-in", // Error code passed in query string as ?error=
+    signIn: '/sign-in',
+    error: '/sign-in', // Error code passed in query string as ?error=
   },
 
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       credentials: {
-          email: { type: "email"},
-        password: { type: "password" },
+        email: { type: 'email' },
+        password: { type: 'password' },
       },
       async authorize(credentials) {
         if (credentials == null) return null;
 
         // find user in database
         const user = await prisma.user.findFirst({
-          where: { 
-            email: credentials.email as string,},
+          where: {
+            email: credentials.email as string,
+          },
         });
 
         // check if user exists and the password matches
@@ -58,7 +59,7 @@ export const config = {
       session.user.id = token.sub as string;
 
       // if there is an update, set the user name
-      if (trigger === "update" ) {
+      if (trigger === 'update') {
         session.user.name = user.name;
       }
       return session;

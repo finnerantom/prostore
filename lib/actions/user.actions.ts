@@ -1,7 +1,9 @@
-"use server";
-import { signInFormSchema } from "../validators";
-import { signIn, signOut } from "@/auth";
-import { isRedirectError } from "next/dist/client/components/redirect-error";
+'use server';
+import { signInFormSchema, signUpFormSchema } from '../validators';
+import { signIn, signOut } from '@/auth';
+import { isRedirectError } from 'next/dist/client/components/redirect-error';
+import { hashSync } from 'bcrypt-ts-edge';
+import { prisma } from '@/db/prisma';
 
 // sign the user in with credentials
 export async function signInWithCredentials(
@@ -10,21 +12,58 @@ export async function signInWithCredentials(
 ) {
   try {
     const user = signInFormSchema.parse({
-      email: formData.get("email"),
-      password: formData.get("password"),
+      email: formData.get('email'),
+      password: formData.get('password'),
     });
 
-    await signIn("credentials", user);
-    return { success: true, message: "Signed in successfully" };
+    await signIn('credentials', user);
+    return { success: true, message: 'Signed in successfully' };
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
     }
-    return { success: false, message: "invalid email or password" };
+    return { success: false, message: 'invalid email or password' };
   }
 }
 
-// sign the user out
+// sign out the user
 export async function signOutUser() {
   await signOut();
+}
+
+// sign up a new user
+export async function signUpUser(prevState: unknown, formData: FormData) {
+  try {
+    const user = signUpFormSchema.parse({
+      name: formData.get('name'),
+      email: formData.get('email'),
+      password: formData.get('password'),
+      confirmPassword: formData.get('confirmPassword'),
+    });
+    console.log('got to here');    // save the plain password to use it for sign in later
+    const plainPassword = user.password;
+
+    // hash the password before saving to the database
+    user.password = hashSync(user.password, 10);
+    await prisma.user.create({
+      data: {
+        name: user.name,
+        email: user.email,
+        password: user.password,
+      },
+    });
+    // sign in the user after successful registration
+    await signIn('credentials', {
+      email: user.email,
+      password: plainPassword,
+    });
+    return { success: true, message: 'User registered successfully' };
+  } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+    console.log(error);
+    
+    return { success: false, message: 'User registration failed' };
+  }
 }
