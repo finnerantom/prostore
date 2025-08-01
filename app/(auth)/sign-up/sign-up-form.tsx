@@ -29,9 +29,6 @@ const SignUpForm = () => {
     );
   };
 
-    // console.log(name, email, password);
-  console.log(signUpDefaultValues);
-  
   return (
     <form action={action}>
       <input type='hidden' name='callbackUrl' value={callbackUrl} readOnly />
@@ -40,9 +37,9 @@ const SignUpForm = () => {
           <Label htmlFor='name'>Name</Label>
           <Input
             id='name'
-            name=''
+            name='name'
             type='text'
-            required
+            // required
             autoComplete='name'
             defaultValue={signUpDefaultValues.name}
           />
@@ -51,9 +48,9 @@ const SignUpForm = () => {
           <Label htmlFor='email'>Email</Label>
           <Input
             id='email'
-            name=''
-            type='email'
-            required
+            name='email'
+            type='text'
+            // required
             autoComplete='email'
             defaultValue={signUpDefaultValues.email}
           />
@@ -63,10 +60,10 @@ const SignUpForm = () => {
           <Label htmlFor='password'>Password</Label>
           <Input
             id='password'
-            name=''
+            name='password'
             type='password'
             required
-            defaultValue={signUpDefaultValues.password}
+            // defaultValue={signUpDefaultValues.password}
           />
         </div>
 
@@ -74,10 +71,10 @@ const SignUpForm = () => {
           <Label htmlFor='confirmPassword'>Confirm Password</Label>
           <Input
             id='confirmPassword'
-            name=''
+            name='confirmPassword'
             type='password'
             required
-            defaultValue={signUpDefaultValues.confirmPassword}
+            // defaultValue={signUpDefaultValues.confirmPassword}
           />
         </div>
         <div>
@@ -100,3 +97,4 @@ const SignUpForm = () => {
 };
 
 export default SignUpForm;
+

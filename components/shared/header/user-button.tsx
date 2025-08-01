@@ -75,16 +75,16 @@ const UserButton = async () => {
                     )} */}
 
           <DropdownMenuItem className='p-0 mb-1'>
-            <form action={signOutUser} className='w-full'>
+          </DropdownMenuItem>
+            <form action={signOutUser} className='w-full' >
               <Button
                 className='w-full py-4 px-2 h-4 justify-start'
                 variant='ghost'
                 type='submit'
-              >
+             >
                 Sign Out
               </Button>
             </form>
-          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

@@ -3,11 +3,11 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { signUpDefaultValues as signUpDefaultValues } from '@/lib/constants';
+import { signUpDefaultValues } from '@/lib/constants';
 import Link from 'next/link';
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { signInWithCredentials as signUpUser } from '@/lib/actions/user.actions';
+import { signUpUser } from '@/lib/actions/user.actions';
 import { useSearchParams } from 'next/navigation';
 
 const SignUpForm = () => {
@@ -31,13 +31,13 @@ const SignUpForm = () => {
 
   return (
     <form action={action}>
-      <input type='hiddden' name='callbackUrl' value={callbackUrl} readOnly />
+      <input type='hidden' name='callbackUrl' value={callbackUrl} readOnly />
       <div className='space-y-6'>
         <div>
           <Label htmlFor='name'>Name</Label>
           <Input
             id='name'
-            name='name'
+            name=''
             type='text'
             required
             autoComplete='name'
@@ -48,7 +48,7 @@ const SignUpForm = () => {
           <Label htmlFor='email'>Email</Label>
           <Input
             id='email'
-            name='email'
+            name=''
             type='email'
             required
             autoComplete='email'
@@ -60,23 +60,21 @@ const SignUpForm = () => {
           <Label htmlFor='password'>Password</Label>
           <Input
             id='password'
-            name='password'
+            name=''
             type='password'
             required
-            autoComplete='password'
-            defaultValue={signUpDefaultValues.password}
+            // defaultValue={signUpDefaultValues.password}
           />
         </div>
 
         <div>
-          <Label htmlFor='confirmPassword'>confirmPassword</Label>
+          <Label htmlFor='confirmPassword'>Confirm Password</Label>
           <Input
             id='confirmPassword'
-            name='confirmPassword'
+            name=''
             type='password'
             required
-            autoComplete='confirmPassword'
-            defaultValue={signUpDefaultValues.confirmPassword}
+            // defaultValue={signUpDefaultValues.confirmPassword}
           />
         </div>
         <div>
@@ -99,3 +97,4 @@ const SignUpForm = () => {
 };
 
 export default SignUpForm;
+

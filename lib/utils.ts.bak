@@ -20,23 +20,17 @@ export function formatNumberWithDecimal(num: number): string {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function formatError(error: any) {
   if (error.name === 'ZodError') {
-    console.log('******* ZodError ********');
-
     // Handle Zod error
-    // const fieldErrors = Object.keys(error.errors).map(
-    //   (field) => error.errors[field].message
-    // );
-
-    // return fieldErrors.join('. ');
+    const fieldErrors = Object.keys(error.errors).map(
+      (field) => error.errors[field].message
+    );
   } else if (
     error.name === 'PrismaClientKnownRequestError' &&
     error.code === 'P2002'
   ) {
     // handle Prisma errors
-    console.log('******* Prisma errors ********');
   } else {
     // handle other errors
-    console.log('******* Other errors ********');
   }
   return 'An unexpected error occurred';
 }
