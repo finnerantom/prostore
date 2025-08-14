@@ -11,27 +11,35 @@ export async function signInWithCredentials(
   prevState: unknown,
   formData: FormData
 ) {
-  try {
-    const user = signInFormSchema.parse({
-      email: formData.get('email'),
-      password: formData.get('password'),
-    });
-    const userWithRedirect = {...user, ...{redirect: false, redirectTo: '/'}};
-    console.log('got to here 1;');
+  const result = signInFormSchema.safeParse({
+    email: formData.get('email'),
+    password: formData.get('password'),
+  });
 
-    await signIn('credentials', {userWithRedirect } );
-
-    console.log('User signed in successfully');
-    return { success: true, message: 'Signed in successfully' };
-
-  } catch (error) {
-    if (isRedirectError(error)) {
-      console.log('Redirect error during sign in:', error);
-    }
-
-    console.log('Sign in error:' , error);
-    return { success: false, message: 'invalid email or password' };
+  if (!result.success) {
+    return { success: false, message: 'Invalid email or password' };
   }
+
+  const user = result.data;
+  const signInResult = await signIn('credentials', {
+    email: user.email,
+    password: user.password,
+    redirect: true,
+    redirectTo: '/',
+  });
+
+  if (isRedirectError(signInResult)) {
+    console.log('Redirect error during sign in:', signInResult);
+    return { success: false, message: 'Redirect error during sign in' };
+  }
+
+  // if (signInResult?.error) {
+  //   console.log('Sign in error:', signInResult.error);
+  //   return { success: false, message: 'Invalid email or password' };
+  // }
+
+  console.log('User signed in successfully');
+  return { success: true, message: 'Signed in successfully' };
 }
 
 // sign out the user

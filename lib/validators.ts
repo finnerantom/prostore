@@ -10,13 +10,19 @@ const currency = z
 
 // Schema for inserting products
 export const insertProductSchema = z.object({
-  name: z.string().min(3, 'Name must be at least 3 characters'),
-  slug: z.string().min(3, 'Slug must be at least 3 characters'),
-  category: z.string().min(3, 'Category must be at least 3 characters'),
-  brand: z.string().min(3, 'Brand must be at least 3 characters'),
-  description: z.string().min(3, 'Description must be at least 3 characters'),
+  name: z.string().min(3, { error: 'Name must be at least 3 characters' }),
+  slug: z.string().min(3, { error: 'Slug must be at least 3 characters' }),
+  category: z
+    .string()
+    .min(3, { error: 'Category must be at least 3 characters' }),
+  brand: z.string().min(3, { error: 'Brand must be at least 3 characters' }),
+  description: z
+    .string()
+    .min(3, { error: 'Description must be at least 3 characters' }),
   stock: z.coerce.number(),
-  images: z.array(z.string()).min(1, 'Product must have at least one image'),
+  images: z
+    .array(z.string())
+    .min(1, { error: 'Product must have at least one image' }),
   isFeatured: z.boolean(),
   banner: z.string().nullable(),
   price: currency,
@@ -24,27 +30,32 @@ export const insertProductSchema = z.object({
 
 // Schema for updating products
 export const updateProductSchema = insertProductSchema.extend({
-  id: z.string().min(1, 'Id is required'),
+  id: z.string().min(1, { error: 'Id is required' }),
 });
 
 // Schema for signing users in
 export const signInFormSchema = z.object({
-  email: z.email('Invalid email address'),
-  password: z.string().trim().min(6, 'Password must be at least 6 characters'),
+  email: z.email({ error: 'Invalid email address' }),
+  password: z
+    .string()
+    .trim()
+    .min(6, { error: 'Password must be at least 6 characters' }),
 });
 
 // Schema for signing up a user
 export const signUpFormSchema = z
   .object({
-    name: z.string().min(3, 'Name must be at least 3 characters'),
-    email: z.email('Invalid email address'),
-    password: z.string().min(6, 'Password must be at least 6 characters'),
+    name: z.string().min(3, { error: 'Name must be at least 3 characters' }),
+    email: z.email({ error: 'Invalid email address' }),
+    password: z
+      .string()
+      .min(6, { error: 'Password must be at least 6 characters' }),
     confirmPassword: z
       .string()
       .trim()
-      .min(6, 'Confirm password must be at least 6 characters'),
+      .min(6, { error: 'Confirm password must be at least 6 characters' }),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
+    error: "Passwords don't match",
     path: ['confirmPassword'],
   });
