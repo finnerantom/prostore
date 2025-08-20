@@ -17,11 +17,10 @@ const LoadingPage = () => {
         alt='Loading...'
         className='mx-auto mt-20'
         unoptimized={true}
-        width='0'
-        height='0'
-        priority={true}
+        width='50'
+        height='50'
+        priority={false}
         sizes='100vw'
-        style={{ width: 150, height: 'auto' }}
       />
     </div>
   );

@@ -4,52 +4,38 @@ import { signIn, signOut } from '@/auth';
 import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import { hashSync } from 'bcrypt-ts-edge';
 import { prisma } from '@/db/prisma';
-import { formatError } from '@/lib/utils';
+import { formatError } from '../utils';
 
 // sign the user in with credentials
 export async function signInWithCredentials(
   prevState: unknown,
   formData: FormData
 ) {
-  const result = signInFormSchema.safeParse({
+  try {
+    const user = signInFormSchema.parse({
     email: formData.get('email'),
     password: formData.get('password'),
   });
 
-  if (!result.success) {
-    return { success: false, message: 'Invalid email or password' };
+    await signIn('credentials', user);
+
+    return { success: true, message: 'Signed in successfully' };
+  } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+    return { success: false, message: 'Sign In failed' };
   }
-
-  const user = result.data;
-  const signInResult = await signIn('credentials', {
-    email: user.email,
-    password: user.password,
-    redirect: true,
-    redirectTo: '/',
-  });
-
-  if (isRedirectError(signInResult)) {
-    console.log('Redirect error during sign in:', signInResult);
-    return { success: false, message: 'Redirect error during sign in' };
-  }
-
-  // if (signInResult?.error) {
-  //   console.log('Sign in error:', signInResult.error);
-  //   return { success: false, message: 'Invalid email or password' };
-  // }
-
-  console.log('User signed in successfully');
-  return { success: true, message: 'Signed in successfully' };
 }
 
-// sign out the user
+// Sign user out
 export async function signOutUser() {
   console.log('Signing out user...');
 
-  await signOut();
+  await signOut({ redirectTo: '/' });
 }
 
-// sign up a new user
+// Sign up user
 export async function signUpUser(prevState: unknown, formData: FormData) {
   try {
     const user = signUpFormSchema.parse({
@@ -61,8 +47,8 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
 
     const plainPassword = user.password;
 
-    // hash the password before saving to the database
-    user.password = hashSync(user.password, 10);
+    user.password = await hashSync(user.password, 10);
+
     await prisma.user.create({
       data: {
         name: user.name,
@@ -72,30 +58,29 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
     });
     // sign in the user after successful registration
     console.log('User registered successfully, now signing in...');
-    console.log('plain password', plainPassword);
-    console.log('user email', user.email);
 
     await signIn('credentials', {
       email: user.email,
       password: plainPassword,
-      redirect: false,
-      // redirectTo: '/',
+      redirect: true,
+      redirectTo: '/product/calvin-klein-slim-fit-stretch-shirt',
     });
-    console.log('successful sign in');
 
     return { success: true, message: 'User registered successfully' };
-  } catch (error) {
+  } catch (error:unknown) {
     if (isRedirectError(error)) {
-      console.log('redirect error', error);
-
       throw error;
     }
-
-    console.log('not a redirect error', error);
-
-    return {
-      success: false,
-      message: formatError(error) || 'An unexpected error occurred',
-    };
+    return { success: false, message: formatError(error)};
   }
 }
+
+// Get user by the ID
+export async function getUserById(userId: string) {
+  const user = await prisma.user.findFirst({
+    where: { id: userId },
+  });
+  if (!user) throw new Error('User not found');
+  return user;
+}
+

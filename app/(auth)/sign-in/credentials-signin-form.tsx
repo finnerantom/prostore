@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { signInDefaultValues } from '@/lib/constants';
 import Link from 'next/link';
 import { useActionState } from 'react';
@@ -15,10 +16,11 @@ const CredentialsSignInForm = () => {
     success: false,
     message: '',
   });
-
+  
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/';
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const callbackURL = searchParams.get('callbackURL') || '/';
+  
   const SignInButton = () => {
     const { pending } = useFormStatus();
 
@@ -31,7 +33,6 @@ const CredentialsSignInForm = () => {
 
   return (
     <form action={action}>
-      <input type='hidden' name='callbackUrl' value={callbackUrl} readOnly />
       <div className='space-y-6'>
         <div>
           <Label htmlFor='email'>Email</Label>
@@ -41,7 +42,7 @@ const CredentialsSignInForm = () => {
             type='email'
             required
             autoComplete='email'
-            defaultValue={signInDefaultValues.email}
+            // defaultValue={signInDefaultValues.email}
           />
         </div>
         <div>
@@ -52,16 +53,16 @@ const CredentialsSignInForm = () => {
             type='password'
             required
             autoComplete='password'
-            defaultValue={signInDefaultValues.password}
+            // defaultValue={signInDefaultValues.password}
           />
         </div>
         <div>
           <SignInButton />
         </div>
 
-        { data && !data.success && (
+        {data && !data.success && (
           <div className='text-center text-destructive'>{data.message}</div>
-        ) }
+        )}
 
         <div className='text-sm text-center text-muted-foreground'>
           Don&apos;t have an account?{' '}

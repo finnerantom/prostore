@@ -19,15 +19,15 @@ export const metadata: Metadata = {
 
 const SignInPage = async (props: {
   searchParams: Promise<{
-    callbackUrl: string;
+    callbackURL: string;
   }>;
 }) => {
-  const { callbackUrl } = await props.searchParams;
+  const { callbackURL } = await props.searchParams;
 
   const session = await auth();
 
   if (session) {
-    return redirect(callbackUrl || '/');
+    return redirect(callbackURL || '/');
   }
 
   return (
@@ -37,8 +37,8 @@ const SignInPage = async (props: {
           <Link href='/' className='flex-center'>
             <Image
               src='/images/logo.svg'
-              width={100}
-              height={100}
+              width={50}
+              height={50}
               alt={`${APP_NAME} logo`}
               priority={true}
             />

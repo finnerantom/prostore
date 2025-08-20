@@ -14,7 +14,7 @@ const ProductImages = ({ images }: { images: string[] }) => {
         width={1000}
         height={1000}
         className='min-h-[300px]'
-        priority={true}
+        priority={false}
         object-cover='cover'
         object-position='center'
       />
@@ -28,7 +28,7 @@ const ProductImages = ({ images }: { images: string[] }) => {
               current === index && 'border-orange-600'
             )}
           >
-            <Image src={image} alt='image' width={100} height={100} />
+            <Image src={image} alt='image' width={100} height={100} priority={true} />
           </div>
         ))}
       </div>

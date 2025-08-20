@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { signUpDefaultValues } from '@/lib/constants';
 import Link from 'next/link';
 import { useActionState } from 'react';
@@ -17,7 +18,8 @@ const SignUpForm = () => {
   });
 
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/';
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const callbackURL = searchParams.get('callbackURL') || '/';
 
   const SignUpButton = () => {
     const { pending } = useFormStatus();
@@ -31,7 +33,6 @@ const SignUpForm = () => {
 
   return (
     <form action={action}>
-      <input type='hidden' name='callbackUrl' value={callbackUrl} readOnly />
       <div className='space-y-6'>
         <div>
           <Label htmlFor='name'>Name</Label>
@@ -41,7 +42,7 @@ const SignUpForm = () => {
             type='text'
             // required
             autoComplete='name'
-            defaultValue={signUpDefaultValues.name}
+            // defaultValue={signUpDefaultValues.name}
           />
         </div>
         <div>
@@ -52,7 +53,7 @@ const SignUpForm = () => {
             type='text'
             // required
             autoComplete='email'
-            defaultValue={signUpDefaultValues.email}
+            // defaultValue={signUpDefaultValues.email}
           />
         </div>
 
@@ -63,6 +64,7 @@ const SignUpForm = () => {
             name='password'
             type='password'
             required
+            autoComplete='password'
             // defaultValue={signUpDefaultValues.password}
           />
         </div>
@@ -74,6 +76,7 @@ const SignUpForm = () => {
             name='confirmPassword'
             type='password'
             required
+            autoComplete='confirm password'
             // defaultValue={signUpDefaultValues.confirmPassword}
           />
         </div>
@@ -97,4 +100,3 @@ const SignUpForm = () => {
 };
 
 export default SignUpForm;
-

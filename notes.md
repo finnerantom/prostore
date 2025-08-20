@@ -40,10 +40,10 @@ npx shadcn@latest add **label** **input**
 
 PS2FGEUG4D4HZH1BM68TEZ8Z
 
-### testing callbackUrl is working ( not needed after search is implemented)
+### testing callbackURL is working ( not needed after search is implemented)
 
-localhost:3000/sign-in?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2Fshipping-address
-https://prostore-alpha-lovat.vercel.app/sign-in?callbackUrl=https%3A%2F%2Fprostore-alpha-lovat.vercel.app%2Fshipping-address
+localhost:3000/sign-in?callbackURL=http%3A%2F%2Flocalhost%3A3000%2Fshipping-address
+https://prostore-alpha-lovat.vercel.app/sign-in?callbackURL=https%3A%2F%2Fprostore-alpha-lovat.vercel.app%2Fshipping-address
 
 ### using vercel cli
 

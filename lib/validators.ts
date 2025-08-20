@@ -55,7 +55,18 @@ export const signUpFormSchema = z
       .trim()
       .min(6, { error: 'Confirm password must be at least 6 characters' }),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    error: "Passwords don't match",
-    path: ['confirmPassword'],
-  });
+.superRefine((val, ctx) => {
+  if (val.password !== val.confirmPassword) {
+    ctx.addIssue({
+      code: "custom",
+      path: ['confirmPassword'],
+      message: 'Passwords do not match',
+    });
+  }
+});
+
+
+  // .refine((data) => data.password === data.confirmPassword, {
+  //    message: 'Passwords do not match',
+  //   path: ['confirmPassword'],
+  // });
