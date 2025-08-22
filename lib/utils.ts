@@ -22,15 +22,16 @@ export function formatNumberWithDecimal(num: number): string {
 
 // Format errors
 export function formatError(error: unknown) {
-  //let message: string;
+  //* ZodError error
   if (error instanceof ZodError) {
-    // Handle ZodError error
     const fieldErrors = JSON.parse(error.message).map(
       (err: { message: string }) => err.message
     );
     return fieldErrors.join('. ');
-    
-  } else if (
+  }
+  
+  //* PrismaClientKnownRequestError error
+  else if (
     error instanceof Prisma.PrismaClientKnownRequestError &&
     error.code === 'P2002' &&
     'meta' in error &&
@@ -39,42 +40,17 @@ export function formatError(error: unknown) {
     'target' in error.meta &&
     Array.isArray(error.meta.target)
   ) {
-    // Handle PrismaClientKnownRequestError error
     const field = error.meta.target ? error.meta.target[0] : 'Field';
     console.log(
       '*** Error type: instance of PrismaClientKnownRequestError ***',
       error.meta.target[0]
     );
     return `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`;
-  } else if (
-    error instanceof Error && //PrismaClientKnownRequestError &&
-    error.name === 'PrismaClientKnownRequestError' &&
-    'code' in error &&
-    error.code === 'P2002'
-  ) {
-    // Handle Prisma error
-    console.log('Error type: instance of PrismaClientKnownRequestError');
-    console.log('Error message: ', JSON.stringify(error.message));
-    console.log('Error name: ', error.code);
-    console.log('Error name: ', error);
+  }
 
-    if (
-      'meta' in error &&
-      typeof error.meta === 'object' &&
-      error.meta !== null &&
-      'meta.target' in error
-    ) {
-      console.log('meta', error.meta);
-
-      // const field = error.meta.target ? error.meta.target[0] : 'Field';
-      // return `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`;
-    }
-
-    const field = error.message; //    .meta?.target ? error.meta?.target[0] : 'Field'
-
-    return `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`;
-  } else {
-    // Handle other errors
+  
+  //*  Handle other errors
+  else {
     if (typeof error === 'object' && error !== null && 'message' in error) {
       console.log('Error type: Other errors ', error);
       return typeof error.message === 'string'

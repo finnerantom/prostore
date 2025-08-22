@@ -5,23 +5,14 @@ const LoadingPage = () => {
   return (
     <div
       style={{
-        height: '150',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        width: '150',
+        height: '100vh',
+        width: '100vw',
       }}
     >
-      <Image
-        src={loader}
-        alt='Loading...'
-        className='mx-auto mt-20'
-        unoptimized={true}
-        width='50'
-        height='50'
-        priority={false}
-        sizes='100vw'
-      />
+      <Image src={loader} height={150} width={150} alt='Loading...' />
     </div>
   );
 };
