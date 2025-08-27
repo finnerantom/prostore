@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import ProductPrice from './product-price';
-import { Product } from '@/app/types';
+import { Product } from '@/types';
 
 const ProductCard = ({ product }: { product: Product }) => {
   return (
@@ -31,7 +31,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             {product.stock > 0 ? (
               <ProductPrice value={Number(product.price)}></ProductPrice>
             ) : (
-              <p className='text-red-500'>Out of Stock</p>
+              <p className='text-red-500 m-2'>Out of Stock</p>
             )}
           </div>
         </div>

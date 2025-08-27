@@ -1,18 +1,26 @@
 import { z } from 'zod';
-import { formatNumberWithDecimal } from './utils';
+// import { formatNumberWithDecimal } from './utils';
 
-const currency = z
+  // const z.number() = z
   // .string()
-  .refine(
-    (value) => /^\d+(\.\d{2})?$/.test(formatNumberWithDecimal(Number(value))),
-    'Price must have exactly two decimal places'
-  );
+  // .regex(/^(0|[1-9]\d*)\.\d{2}$/, { message: 'Price must have exactly two decimal places' })
+  // .refine(val => parseFloat(val) > 0, { message: 'Price must be greater than 0' });
 
-// Schema for inserting products
-export const insertProductSchema = z.object({
-  name: z.string().min(3, { error: 'Name must be at least 3 characters' }),
-  slug: z.string().min(3, { error: 'Slug must be at least 3 characters' }),
-  category: z
+  // const z.number() = z.string()
+  // .refine(
+  //   (value) => /^\d+(\.\d{2})?$/.test(formatNumberWithDecimal(Number(value))),
+  //   'Price must have exactly two decimal places')
+  // .transform((value) => Number(value))
+  
+  // .regex(/^\d+(\.\d{1,2})?$/, "Invalid price format")
+  // .transform((val) => Number(val)),
+
+  
+  // Schema for inserting products
+  export const insertProductSchema = z.object({
+    name: z.string().min(3, { error: 'Name must be at least 3 characters' }),
+    slug: z.string().min(3, { error: 'Slug must be at least 3 characters' }),
+    category: z
     .string()
     .min(3, { error: 'Category must be at least 3 characters' }),
   brand: z.string().min(3, { error: 'Brand must be at least 3 characters' }),
@@ -25,7 +33,7 @@ export const insertProductSchema = z.object({
     .min(1, { error: 'Product must have at least one image' }),
   isFeatured: z.boolean(),
   banner: z.string().nullable(),
-  price: currency,
+  price: z.number(),
 });
 
 // Schema for updating products
@@ -55,18 +63,27 @@ export const signUpFormSchema = z
       .trim()
       .min(6, { error: 'Confirm password must be at least 6 characters' }),
   })
-.superRefine((val, ctx) => {
-  if (val.password !== val.confirmPassword) {
-    ctx.addIssue({
-      code: "custom",
-      path: ['confirmPassword'],
-      message: 'Passwords do not match',
-    });
-  }
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  });
+
+// Cart Schema
+export const cartItemSchema = z.object({
+  productId: z.string().min(1, { error: 'ProdProducts is required' }),
+  name: z.string().min(1, { error: 'Name is required' }),
+  slug: z.string().min(1, { error: 'Slug is required' }),
+  qty: z.number().int().nonnegative('Quantity must be a positive number'),
+  image: z.string().min(1, { error: 'Image is required' }),
+  price: z.number(),
 });
 
-
-  // .refine((data) => data.password === data.confirmPassword, {
-  //    message: 'Passwords do not match',
-  //   path: ['confirmPassword'],
-  // });
+export const insertCartSchema = z.object({
+  items: z.array(cartItemSchema),
+  itemsPrice: z.number(),
+  totalPrice: z.number(),
+  shippingPrice: z.number(),
+  taxPrice: z.number(),
+  sessionCartId: z.string().min(1, { error: 'Session Cart ID is required' }),
+  userId: z.string().optional().nullable(),
+});
